@@ -22,6 +22,9 @@ class Element:
         string = str(self.prior)+": "+str(self.val)
         return string
 
+    def __repr__(self):
+        return str(self.prior)+ ": "+str(self.val)
+
 class Heap:
 
     def __init__(self):
@@ -73,6 +76,7 @@ class Heap:
 
             while self.parent(i) is not None and self.tab[self.parent(i)] < self.tab[i]:
                 self.tab[self.parent(i)], self.tab[i] = self.tab[i], self.tab[self.parent(i)]
+                i = self.parent(i)
 
     def dequeue(self):
 
@@ -81,13 +85,15 @@ class Heap:
         else:
             self.tab[0], self.tab[-1] = self.tab[-1], self.tab[0]
             self.size-=1
-            pom=self.tab.pop()
+            pom=self.tab[-1]
+            del self.tab[-1]
+
 
             curr_node=0
 
             while 1:
                 if self.left(curr_node) is not None and self.right(curr_node) is not None:
-                    if self.tab[curr_node] < self.tab[self.left(curr_node)] and self.tab[curr_node] < self.tab[self.right(curr_node)]:
+                    if self.tab[curr_node] < self.tab[self.left(curr_node)] or self.tab[curr_node] == self.tab[self.left(curr_node)] and self.tab[curr_node] < self.tab[self.right(curr_node)] or self.tab[curr_node] == self.tab[self.left(curr_node)]:
                         if self.tab[self.left(curr_node)] > self.tab[self.right(curr_node)]:
                             self.tab[self.left(curr_node)], self.tab[curr_node] = self.tab[curr_node], self.tab[self.left(curr_node)]
                             curr_node = self.left(curr_node)
@@ -141,6 +147,8 @@ def main():
         heap.enqueue(key[i], tab[i])
     heap.print_tree(0, 0);
     heap.print_tab()
+
+
 
     print(heap.dequeue())
     print(heap.peek())
